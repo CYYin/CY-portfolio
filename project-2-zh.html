@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>匯率自動化與多來源資料整合 | 殷長宇</title>
+<meta name="description" content="專案詳情：匯率自動化與多來源資料整合。">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <div class="container">
+    <a href="index-zh.html" class="nav-logo">殷長宇<span>.</span></a>
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index-zh.html">首頁</a></li>
+        <li><a href="about-zh.html">關於我</a></li>
+        <li><a href="projects-zh.html" class="active">專案作品</a></li>
+        <li><a href="contact-zh.html">聯絡方式</a></li>
+      </ul>
+      <div class="lang-switch">
+        <a href="project-2.html">EN</a>
+        <a href="project-2-zh.html" class="active">中文</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DETAIL HEADER ============ -->
+<section class="detail-header">
+  <div class="container">
+    <a href="projects-zh.html" class="back-link">&larr; 返回專案作品</a>
+    <h1>匯率自動化與多來源資料整合</h1>
+  </div>
+</section>
+
+<!-- ============ DETAIL CONTENT ============ -->
+<section>
+  <div class="container detail-content">
+
+    <h2>問題</h2>
+    <p>
+      財務與會計團隊每日需要參考多家台灣銀行與政府機構的匯率資料，
+      以支援報表製作與帳務核對。過去以人工方式蒐集這些匯率，
+      不僅耗時且容易出錯，每天需耗費超過 30 分鐘的人力，
+      而隨著資料來源與下游報表數量增加，這個問題也愈趨嚴重。
+    </p>
+
+    <h2>解決方案</h2>
+    <p>
+      我建構了一套端到端的匯率自動化系統，自動從多家銀行與政府機構的
+      網站擷取每日與每月匯率，並運用 Selenium 與 Playwright 處理各種反爬蟲機制。
+      系統透過 MERGE 式 ETL 管線，將蒐集到的資料同步寫入 SQL Server 與 Oracle
+      兩套資料庫，確保各系統間的資料一致性；接著自動產出 Excel 報表，
+      並發送 Email 通知相關利害關係人，完全免除人工蒐集資料與整理報表的作業。
+    </p>
+
+    <h2>技術棧</h2>
+    <ul>
+      <li>Python</li>
+      <li>Selenium 與 Playwright（網頁爬蟲、反爬蟲處理）</li>
+      <li>SQL Server 與 Oracle（MERGE 式 ETL 管線）</li>
+      <li>Excel 報表產出</li>
+      <li>自動化 Email 通知</li>
+    </ul>
+
+    <h2>我的角色</h2>
+    <p>
+      我獨立設計並建構了整套自動化管線 — 從資料來源的擷取邏輯，
+      到資料庫整合與報表發送，全程一手包辦。我也與財務團隊協調確認資料來源，
+      並訂定資料驗證與例外處理的商業規則。
+    </p>
+
+    <h2>成效／指標</h2>
+    <ul class="impact-list">
+      <li>將每日人工處理時間從 30 分鐘以上縮短至 5 分鐘以內</li>
+      <li>消除多家銀行與政府機構資料來源的人工登錄錯誤</li>
+      <li>統一 SQL Server 與 Oracle 系統間的匯率資料標準</li>
+    </ul>
+
+    <h2>標籤</h2>
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">網頁爬蟲</span>
+      <span class="tag">ETL</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">流程自動化</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">&copy; 2026 殷長宇. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="mailto:nomu50@gmail.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/chang-yu-yin-2a808455/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://github.com/CYYin" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

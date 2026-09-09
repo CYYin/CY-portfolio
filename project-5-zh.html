@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台 | 殷長宇</title>
+<meta name="description" content="專案詳情：HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台。">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <div class="container">
+    <a href="index-zh.html" class="nav-logo">殷長宇<span>.</span></a>
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index-zh.html">首頁</a></li>
+        <li><a href="about-zh.html">關於我</a></li>
+        <li><a href="projects-zh.html" class="active">專案作品</a></li>
+        <li><a href="contact-zh.html">聯絡方式</a></li>
+      </ul>
+      <div class="lang-switch">
+        <a href="project-5.html">EN</a>
+        <a href="project-5-zh.html" class="active">中文</a>
+      </div>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DETAIL HEADER ============ -->
+<section class="detail-header">
+  <div class="container">
+    <a href="projects-zh.html" class="back-link">&larr; 返回專案作品</a>
+    <h1>HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台</h1>
+  </div>
+</section>
+
+<!-- ============ DETAIL CONTENT ============ -->
+<section>
+  <div class="container detail-content">
+
+    <h2>問題</h2>
+    <p>
+      超過 300 個 BPM 表單、累積了多年的歷史業務資料，存放在 HCL Notes 12 這套
+      報表與整合能力有限的既有平台上。若以人工方式將這麼大量的表單 — 每個表單
+      皆有不同的欄位結構、雙語標籤與主從（Master/Detail）關聯 — 遷移至現代化資料庫，
+      勢必極為耗時且容易出錯，而業務單位也需要在轉換期間讓新舊系統保持同步。
+    </p>
+
+    <h2>解決方案</h2>
+    <p>
+      我建構了一套端到端的資料遷移與同步平台，透過 Domino REST API（DRAPI）
+      自動化 300 多個 BPM 表單從 HCL Notes 12 遷移至 SQL Server 的歷史資料遷移作業。
+      平台運用 Claude AI API 進行語意推論以判斷欄位對應關係 — 協調中英文標籤、
+      資料型別與主從結構的差異 — 並在資料實際搬移前自動產出 Excel 對應表供業務審核。
+      對應表確認後，系統會自動在 SQL Server 建立目標資料表，並執行完整歷史資料匯入。
+      為了讓兩套系統在轉換期間持續保持一致，我也建置了持續性的增量同步機制，
+      包含未讀文件檢查點（unread-document checkpointing）、依 notes_unid 執行
+      新增／更新的 SQL Server UPSERT 邏輯、軟刪除（soft-delete）處理，
+      以及具備失敗 Email 警示的同步稽核紀錄。
+    </p>
+
+    <h2>技術棧</h2>
+    <ul>
+      <li>Python</li>
+      <li>Domino REST API (DRAPI)</li>
+      <li>Claude AI API（語意欄位對應推論）</li>
+      <li>SQL Server（UPSERT 式同步、軟刪除處理）</li>
+      <li>歷史與增量資料遷移的 ETL 管線</li>
+      <li>自動化稽核紀錄與 Email 警示</li>
+    </ul>
+
+    <h2>我的角色</h2>
+    <p>
+      我設計並建構了整套遷移與同步平台，包含 AI 輔助欄位對應流程與增量同步架構。
+      我也與這 300 多個表單各自的業務負責人協調，於遷移前逐一審核並確認
+      AI 產出的對應表。
+    </p>
+
+    <h2>成效／指標</h2>
+    <ul class="impact-list">
+      <li>自動完成 300 多個 BPM 表單的遷移，無需人工進行欄位對應</li>
+      <li>在轉換期間實現 HCL Notes 與 SQL Server 之間持續且可靠的同步</li>
+      <li>透過檢查點機制、軟刪除處理與稽核紀錄降低資料遺失風險</li>
+    </ul>
+
+    <h2>標籤</h2>
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">Domino REST API (DRAPI)</span>
+      <span class="tag">Claude AI API</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">ETL</span>
+      <span class="tag">資料遷移</span>
+      <span class="tag">流程自動化</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">&copy; 2026 殷長宇. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="mailto:nomu50@gmail.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/chang-yu-yin-2a808455/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://github.com/CYYin" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
