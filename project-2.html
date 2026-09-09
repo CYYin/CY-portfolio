@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exchange Rate Automation &amp; Multi-Source Data Integration | Chang Yu Yin</title>
+<meta name="description" content="Project detail: Exchange Rate Automation &amp; Multi-Source Data Integration.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Chang Yu Yin<span>.</span></a>
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DETAIL HEADER ============ -->
+<section class="detail-header">
+  <div class="container">
+    <a href="projects.html" class="back-link">&larr; Back to Projects</a>
+    <h1>Exchange Rate Automation &amp; Multi-Source Data Integration</h1>
+  </div>
+</section>
+
+<!-- ============ DETAIL CONTENT ============ -->
+<section>
+  <div class="container detail-content">
+
+    <h2>Problem</h2>
+    <p>
+      Finance and accounting teams needed daily and monthly exchange rates from multiple Taiwanese
+      bank and government sources to support reporting and reconciliation. Collecting these rates
+      manually was slow, error-prone, and consumed over 30 minutes of staff time each day — time that
+      scaled poorly as more source systems and downstream reports were added.
+    </p>
+
+    <h2>Solution</h2>
+    <p>
+      I built an end-to-end exchange rate automation system that scrapes daily and monthly rates from
+      multiple bank and government websites, handling anti-bot measures using Selenium and Playwright.
+      The system upserts the collected data into both SQL Server and Oracle databases through
+      MERGE-based ETL pipelines, ensuring consistency across systems. It then automatically generates
+      Excel reports and sends email notifications to relevant stakeholders, removing the need for any
+      manual data collection or report assembly.
+    </p>
+
+    <h2>Tech Stack</h2>
+    <ul>
+      <li>Python</li>
+      <li>Selenium &amp; Playwright (web scraping, anti-bot handling)</li>
+      <li>SQL Server &amp; Oracle (MERGE-based ETL pipelines)</li>
+      <li>Excel report generation</li>
+      <li>Automated email notifications</li>
+    </ul>
+
+    <h2>Your Role</h2>
+    <p>
+      I designed and built the full automation pipeline end to end — from source scraping logic to
+      database integration and report distribution. I also identified the source systems in coordination
+      with finance stakeholders and defined the business rules for data validation and exception handling.
+    </p>
+
+    <h2>Impact / Metrics</h2>
+    <ul class="impact-list">
+      <li>Reduced daily manual processing time from 30+ minutes to under 5 minutes</li>
+      <li>Eliminated manual data entry errors across multiple bank and government sources</li>
+      <li>Standardized exchange rate data across SQL Server and Oracle systems</li>
+    </ul>
+
+    <h2>Tags</h2>
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">Web Scraping</span>
+      <span class="tag">ETL</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">Process Automation</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">&copy; 2026 Chang Yu Yin. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="mailto:nomu50@gmail.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/chang-yu-yin-2a808455/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://github.com/CYYin" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

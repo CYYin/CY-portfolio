@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform | Chang Yu Yin</title>
+<meta name="description" content="Project detail: HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Chang Yu Yin<span>.</span></a>
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DETAIL HEADER ============ -->
+<section class="detail-header">
+  <div class="container">
+    <a href="projects.html" class="back-link">&larr; Back to Projects</a>
+    <h1>HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform</h1>
+  </div>
+</section>
+
+<!-- ============ DETAIL CONTENT ============ -->
+<section>
+  <div class="container detail-content">
+
+    <h2>Problem</h2>
+    <p>
+      Over 300 BPM forms containing years of historical business data lived in HCL Notes 12, a legacy
+      platform with limited reporting and integration capabilities. Migrating this volume of forms —
+      each with different field structures, bilingual labels, and Master/Detail relationships — to a
+      modern database manually would have been extremely time-consuming and error-prone, and the
+      business needed a way to keep the two systems in sync during the transition period.
+    </p>
+
+    <h2>Solution</h2>
+    <p>
+      I built an end-to-end data migration and sync platform that automates historical data migration
+      for 300+ BPM forms from HCL Notes 12 to SQL Server via the Domino REST API (DRAPI). The platform
+      uses the Claude AI API to semantically infer field mappings — reconciling Chinese and English
+      labels, data types, and Master/Detail structures — and auto-generates Excel mapping sheets for
+      business review before any data moves. Once mappings are approved, the system auto-creates target
+      tables in SQL Server and runs the full-history data import. To keep both systems aligned going
+      forward, I implemented a continuous incremental sync mechanism using unread-document checkpointing,
+      SQL Server UPSERT logic (insert/update by notes_unid), soft-delete handling, and sync audit logging
+      with email alerting for failures.
+    </p>
+
+    <h2>Tech Stack</h2>
+    <ul>
+      <li>Python</li>
+      <li>Domino REST API (DRAPI)</li>
+      <li>Claude AI API (semantic field-mapping inference)</li>
+      <li>SQL Server (UPSERT-based sync, soft-delete handling)</li>
+      <li>ETL pipelines for historical &amp; incremental data migration</li>
+      <li>Automated audit logging &amp; email alerting</li>
+    </ul>
+
+    <h2>Your Role</h2>
+    <p>
+      I designed and built the entire migration and sync platform, including the AI-assisted field
+      mapping process and the incremental sync architecture. I also coordinated with business owners
+      of each of the 300+ forms to review and validate the AI-generated mapping sheets before migration.
+    </p>
+
+    <h2>Impact / Metrics</h2>
+    <ul class="impact-list">
+      <li>Automated migration of 300+ BPM forms without manual field-mapping effort</li>
+      <li>Enabled continuous, reliable sync between HCL Notes and SQL Server during transition</li>
+      <li>Reduced risk of data loss through checkpointing, soft-delete handling, and audit logging</li>
+    </ul>
+
+    <h2>Tags</h2>
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">Domino REST API (DRAPI)</span>
+      <span class="tag">Claude AI API</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">ETL</span>
+      <span class="tag">Data Migration</span>
+      <span class="tag">Process Automation</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">&copy; 2026 Chang Yu Yin. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="mailto:nomu50@gmail.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/chang-yu-yin-2a808455/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://github.com/CYYin" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

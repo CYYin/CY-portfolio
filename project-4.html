@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINPO SRM-ERP Order Integration Platform | Chang Yu Yin</title>
+<meta name="description" content="Project detail: KINPO SRM-ERP Order Integration Platform.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-logo">Chang Yu Yin<span>.</span></a>
+    <nav>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DETAIL HEADER ============ -->
+<section class="detail-header">
+  <div class="container">
+    <a href="projects.html" class="back-link">&larr; Back to Projects</a>
+    <h1>KINPO SRM-ERP Order Integration Platform</h1>
+  </div>
+</section>
+
+<!-- ============ DETAIL CONTENT ============ -->
+<section>
+  <div class="container detail-content">
+
+    <h2>Problem</h2>
+    <p>
+      Purchase orders and order-change notifications between Kinpo's Supplier Open API and Sercomm's
+      internal SRM/ERP systems were not integrated, requiring manual review and entry. This created
+      delays in responding to order changes, increased the risk of missed deadlines within supplier
+      change windows, and made it difficult to evaluate order feasibility against production capacity
+      in a timely way.
+    </p>
+
+    <h2>Solution</h2>
+    <p>
+      I built a full-stack order integration platform connecting Kinpo's Supplier Open API with
+      Sercomm's internal SRM and ERP systems. The platform ingests inbound purchase orders and
+      order-change (POC) notifications via signed API calls, then applies business rules — including
+      a 70-day change window and APS-based feasibility evaluation — to automatically generate accept,
+      change, or reject responses. Approved orders are synced into Oracle ERP through PL/SQL
+      MERGE/INSERT pipelines with per-record commit and retry logic to ensure reliability. The system
+      runs on FastAPI with Celery/Redis for asynchronous task orchestration, APScheduler for weekly
+      APS snapshot jobs, and maintains dual-database persistence — SQL Server for SRM data and Oracle
+      for ERP data — with automated error tracking, email alerting, and a Vue 3 admin dashboard for
+      order and log visibility.
+    </p>
+
+    <h2>Tech Stack</h2>
+    <ul>
+      <li>Python &amp; FastAPI</li>
+      <li>Celery &amp; Redis (async task orchestration)</li>
+      <li>APScheduler (scheduled APS snapshot jobs)</li>
+      <li>SQL Server (SRM data) &amp; Oracle (ERP data, PL/SQL MERGE/INSERT)</li>
+      <li>REST API Integration (signed API calls)</li>
+      <li>Vue 3 (admin dashboard)</li>
+      <li>Automated error tracking &amp; email alerting</li>
+    </ul>
+
+    <h2>Your Role</h2>
+    <p>
+      I served as both project lead and lead developer, designing the system architecture end to end —
+      from API integration and business rule design to the database synchronization strategy and admin
+      dashboard. I worked closely with supply chain and ERP stakeholders to define the acceptance rules
+      and feasibility logic embedded in the platform.
+    </p>
+
+    <h2>Impact / Metrics</h2>
+    <ul class="impact-list">
+      <li>Automated response generation for inbound purchase orders and order changes</li>
+      <li>Reduced manual review effort through rule-based accept/change/reject logic</li>
+      <li>Improved reliability of ERP synchronization with per-record commit and retry handling</li>
+    </ul>
+
+    <h2>Tags</h2>
+    <div class="tags">
+      <span class="tag">Python</span>
+      <span class="tag">FastAPI</span>
+      <span class="tag">Celery</span>
+      <span class="tag">Vue.js</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">Oracle</span>
+      <span class="tag">REST API Integration</span>
+      <span class="tag">ETL</span>
+      <span class="tag">Business Rule Engine</span>
+      <span class="tag">Process Automation</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">&copy; 2026 Chang Yu Yin. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="mailto:nomu50@gmail.com">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/chang-yu-yin-2a808455/" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://github.com/CYYin" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
