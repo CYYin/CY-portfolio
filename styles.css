@@ -558,55 +558,66 @@ section {
 }
 
 .contact-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  max-width: 780px;
-}
-
-.contact-card {
+  max-width: 640px;
   background-color: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  padding: 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
   box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  overflow: hidden;
 }
 
-.contact-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-  border-color: var(--accent);
+.contact-card {
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--card-border);
+  transition: background-color 0.2s ease;
+}
+
+.contact-card:last-child {
+  border-bottom: none;
+}
+
+a.contact-card:hover {
+  background-color: var(--bg-alt);
 }
 
 .contact-icon {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 10px;
-  background-color: var(--accent-soft);
-  color: var(--accent);
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+}
+
+.contact-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+}
+
+.contact-icon svg.icon-fill {
+  stroke: none;
+  fill: currentColor;
 }
 
 .contact-card-label {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.6px;
   color: var(--text-muted);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .contact-card-value {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-heading);
-  font-size: 0.95rem;
+  font-size: 1rem;
   word-break: break-word;
 }
 
