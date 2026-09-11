@@ -43,47 +43,124 @@
 <section>
   <div class="container detail-content">
 
-    <h2>Problem</h2>
+    <h2>Business Context &amp; Problem</h2>
     <p>
-      The organization's BPM systems were built on legacy Lotus Notes workflows — agent scripts,
-      DXL forms, and flow exports — that were poorly documented and difficult for new development
-      teams to understand. Rebuilding or extending these workflows required significant manual effort
-      to reverse-engineer business logic before any development could begin, slowing down delivery
-      and increasing the risk of missed requirements.
+      The company had long relied on an aging Lotus Notes system to handle form submissions and
+      approval workflows across HR, administration, and IT — more than sixteen commonly used forms
+      in total. As the Notes platform grew harder to maintain and extend, and could no longer meet
+      modern integration needs (such as connecting to ERP and EHR systems), the company launched a
+      replacement initiative to retire the legacy system in favor of a self-built platform,
+      <strong>UniCore BPM 2.0</strong>.
     </p>
-
-    <h2>Solution</h2>
     <p>
-      I designed an AI-powered development framework that reshaped how BPM delivery works end to end.
-      The framework starts by reverse-engineering legacy Lotus Notes artifacts — agent scripts, DXL forms,
-      and flow exports — into clear, structured functional specifications. These specifications then feed
-      into an AI-assisted development pipeline that accelerates coding, supports structured testing,
-      and streamlines resolution of issues raised during User Acceptance Testing (UAT). The result is a
-      repeatable "development factory" model that shortens the path from legacy analysis to production release.
+      The core problem broke down into three layers:
     </p>
-
-    <h2>Tech Stack</h2>
     <ul>
-      <li>Generative AI (GenAI) tooling for code and specification generation</li>
-      <li>Lotus Notes / HCL Domino (agent scripts, DXL, workflow exports)</li>
-      <li>Structured specification and documentation frameworks</li>
-      <li>BPM platform development &amp; testing tools</li>
+      <li><strong>System layer</strong>: The Notes architecture was aging and hard to maintain, making it costly to add or modify forms and workflows.</li>
+      <li><strong>Process layer</strong>: Approval logic and routing rules had accumulated for years inside Notes code and flow designs, with no unified standard, making them difficult to audit or extend.</li>
+      <li><strong>Integration layer</strong>: The legacy system couldn't effectively connect with other enterprise systems (ERP, EHR, etc.), creating an information silo.</li>
     </ul>
-
-    <h2>Your Role</h2>
     <p>
-      I led the design of the AI-powered development framework as Project Manager, defining the
-      reverse-engineering methodology and coordinating between business analysts, developers, and
-      QA teams. I was responsible for establishing the AI-assisted workflow, driving UAT issue
-      triage and resolution, and ensuring releases met both business requirements and governance standards.
+      The goal of this project was to build an enterprise-grade workflow platform on FastAPI and Vue 3,
+      with a generic form engine and a multi-step approval workflow engine, and to migrate 16+ forms
+      and workflows from the legacy system to the new platform safely and in a controlled way.
     </p>
 
-    <h2>Impact / Metrics</h2>
-    <ul class="impact-list">
-      <li>Significantly reduced time spent reverse-engineering legacy BPM workflows before development</li>
-      <li>Established a repeatable AI-assisted delivery process adopted across BPM development cycles</li>
-      <li>Improved traceability between legacy business logic and new system specifications</li>
+    <h2>My Role &amp; Key Challenges</h2>
+    <p>
+      <strong>My role:</strong> Project Manager / AI Transformation Lead. I owned requirements
+      clarification, migration scheduling, and cross-department communication for the overall project,
+      and led the adoption of AI-assisted development into the existing engineering workflow as the core
+      lever for accelerating both legacy reverse-engineering and new-platform development.
+    </p>
+
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>Stakeholders</h4>
+        <ul>
+          <li>IT department: operations and integration point of contact, ensuring the new platform met existing infrastructure standards</li>
+          <li>Senior leadership: budget approval and direction, focused on migration risk and go-live timeline</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Constraints</h4>
+        <ul>
+          <li>Legacy baggage: had to correctly carry over existing Notes form data and process design without disrupting the business</li>
+          <li>Limited resources: 16+ forms had to be migrated incrementally, making AI assistance essential to throughput</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>Correctness of AI-assisted output: unverified conversions could mistranslate implicit logic buried in Notes</li>
+          <li>User adoption: the new platform needed to be intuitive enough, backed by communication and training, to lower resistance</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Approach &amp; Solution</h2>
+    <p>
+      The strategy combined three elements: a modernized architecture, generic engines, and AI-assisted migration.
+    </p>
+    <ul>
+      <li><strong>FastAPI + Vue 3 modern architecture</strong>: A high-performance FastAPI backend and a Vue 3 frontend for the admin console and user portal, replacing Notes' closed client architecture with far better maintainability and extensibility.</li>
+      <li><strong>Schema-driven form engine</strong>: Form fields, validation rules, and display logic are defined via schema instead of hard-coded per form, so creating new forms or adjusting existing ones becomes a configuration task rather than a development one — substantially cutting development cost.</li>
+      <li><strong>BPM 2.0 multi-step approval engine</strong>: Supports conditional routing, parallel approvals, authority rules, and organizational hierarchy — replacing the fragmented, hard-to-audit process logic scattered across Notes with one controllable, traceable workflow core shared by every form.</li>
+      <li><strong>AI-assisted reverse engineering (Notes conversion toolchain)</strong>: For legacy assets (exported DXL form designs, exported flow definitions, field script logic), I built a set of AI-assisted conversion tools that automatically translate Notes design assets into draft schemas, workflow step configurations, and field logic (visible_when / required_when / auto_fill / compute) for the new platform — reviewed and confirmed by a human before publishing, dramatically accelerating what used to be heavily manual comparison work.</li>
     </ul>
+
+    <h2>Key Decisions &amp; Trade-offs</h2>
+    <div class="decision-block">
+      <h4>Decision</h4>
+      <p>Use AI to generate, but keep human verification at every critical step.</p>
+      <p>
+        Facing the tension between "using AI to speed up migration" and "guaranteeing correctness in a
+        production system," I chose not to pursue full automation. Instead, AI was positioned as an
+        accelerator rather than the final decision-maker: it handled the highly repetitive, high-volume
+        analysis and conversion work (form field comparison, workflow step translation), while form
+        publishing and workflow go-live remained gated by human review and sign-off.
+      </p>
+      <h4>Why</h4>
+      <p>
+        When an enterprise approval workflow breaks, it affects real signing authority and compliance —
+        the tolerance for error is extremely low. Compared with the speed advantage of end-to-end
+        automation, keeping a human checkpoint better guarantees reliability in production.
+      </p>
+      <h4>What we gave up</h4>
+      <p>
+        Compared with a fully automated pipeline, this approach sacrificed some of the theoretical speed
+        ceiling — migration still required human effort for review and validation, and couldn't be fully
+        hands-off. In exchange, it delivered controlled risk and trustworthy output, which was the more
+        pragmatic choice given limited resources and no room for repeated rework.
+      </p>
+    </div>
+
+    <h2>Deliverables &amp; Impact</h2>
+    <h3>Deliverables</h3>
+    <ul>
+      <li>Approval workflow platform (BPM 2.0): a complete enterprise workflow system with multi-step approval, conditional routing, parallel sign-off, authority rules, a user portal, and an admin console.</li>
+      <li>Form conversion / reverse-engineering toolchain: automated tooling that translates Notes form designs, flow exports, and field script logic into assets usable on the new platform.</li>
+      <li>Standardized spec templates / migration process: a repeatable standard operating procedure and spec document template for each form migration, so work can be replicated, tracked, and handed off.</li>
+    </ul>
+
+    <h3>Impact</h3>
+    <ul class="impact-list">
+      <li>Reduced manual analysis and migration effort: AI-assisted reverse engineering significantly cut the time previously spent manually comparing legacy Notes forms and process logic</li>
+      <li>Improved development consistency and maintainability: the schema-driven form engine and unified workflow engine gave every form a consistent standard to build and maintain against, lowering the cost of future extension and debugging</li>
+      <li>Established a reusable AI-assisted delivery framework: this "AI-assisted analysis plus human verification" method and toolchain is replicable and can be applied to future system migrations or development projects</li>
+    </ul>
+
+    <h2>Lessons Learned</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>The real challenge of AI transformation isn't technical — it's about workflow redesign and adoption.</strong>
+        The biggest bottleneck in adopting AI-assisted development usually isn't whether AI can produce
+        correct code or conversions; it's whether the team redesigns its workflow to use AI well — where
+        to introduce it, which checkpoints must stay human-gated, and how to build the team's trust in
+        this new way of working. Technical capability is just the starting point; what actually determines
+        a project's success is the process and organizational adaptability built around that technology.
+      </p>
+    </div>
 
     <h2>Tags</h2>
     <div class="tags">
