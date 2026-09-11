@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform | Chang Yu Yin</title>
-<meta name="description" content="Project detail: HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform.">
+<title>SAP ERP Implementation &amp; BPM Integration | Chang Yu Yin</title>
+<meta name="description" content="Project detail: SAP ERP (MM/FI/CO) implementation and BPM system integration.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
 <section class="detail-header">
   <div class="container">
     <a href="projects.html" class="back-link">&larr; Back to Projects</a>
-    <h1>HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform</h1>
+    <h1>SAP ERP Implementation &amp; BPM Integration</h1>
   </div>
 </section>
 
@@ -43,61 +43,127 @@
 <section>
   <div class="container detail-content">
 
-    <h2>Problem</h2>
-    <p>
-      Over 300 BPM forms containing years of historical business data lived in HCL Notes 12, a legacy
-      platform with limited reporting and integration capabilities. Migrating this volume of forms —
-      each with different field structures, bilingual labels, and Master/Detail relationships — to a
-      modern database manually would have been extremely time-consuming and error-prone, and the
-      business needed a way to keep the two systems in sync during the transition period.
+    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 32px;">
+      Role: Project Manager&nbsp;&nbsp;|&nbsp;&nbsp;Scope: ERP (SAP MM/FI/CO) and BPM integration&nbsp;&nbsp;|&nbsp;&nbsp;Departments: Accounting, Procurement
     </p>
 
-    <h2>Solution</h2>
+    <h2>Business Context &amp; Problem</h2>
     <p>
-      I built an end-to-end data migration and sync platform that automates historical data migration
-      for 300+ BPM forms from HCL Notes 12 to SQL Server via the Domino REST API (DRAPI). The platform
-      uses the Claude AI API to semantically infer field mappings — reconciling Chinese and English
-      labels, data types, and Master/Detail structures — and auto-generates Excel mapping sheets for
-      business review before any data moves. Once mappings are approved, the system auto-creates target
-      tables in SQL Server and runs the full-history data import. To keep both systems aligned going
-      forward, I implemented a continuous incremental sync mechanism using unread-document checkpointing,
-      SQL Server UPSERT logic (insert/update by notes_unid), soft-delete handling, and sync audit logging
-      with email alerting for failures.
+      The company's existing ERP system was outdated and could no longer keep up with the growing
+      complexity of accounting and procurement workflows, so an ERP modernization project was launched
+      to bring in SAP (MM/FI/CO modules) as a replacement. Because the company also ran a BPM system
+      for internal approvals and operational workflows, this wasn't simply a system swap — it also had
+      to guarantee that data and process logic between BPM and the new SAP system connected correctly,
+      without creating a new information silo or duplicate work.
     </p>
 
-    <h2>Tech Stack</h2>
+    <h2>My Role &amp; Key Challenges</h2>
+    <p>
+      <strong>My role:</strong> Project Manager, spanning the full project lifecycle — from requirements
+      interviews and process analysis, to planning the BPM/SAP system integration, to coordinating UAT
+      and integration testing, through to post-go-live system maintenance and improvement.
+    </p>
+
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>Stakeholders</h4>
+        <ul>
+          <li>Accounting department (finance process owner)</li>
+          <li>Procurement department (purchasing process owner)</li>
+          <li>IT / systems integration team</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Constraints</h4>
+        <ul>
+          <li>Timeline pressure to complete requirements gathering, integration, and testing within a limited window</li>
+          <li>Needed to coordinate requirements and priorities across multiple departments at once</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>Accounting and procurement staff were unfamiliar with SAP, making user adoption a decisive factor in the rollout's success</li>
+          <li>Large differences in fields and process logic between BPM and SAP made data mapping and integration design difficult</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Approach &amp; Solution</h2>
+    <p>
+      The project followed a full path from requirements to production: first, requirements interviews
+      with accounting and procurement to identify the gap between existing processes and the SAP
+      MM/FI/CO modules; then planning the integration approach between BPM and SAP and designing the
+      data integration flow between the two systems; then validating correctness through integration
+      testing and UAT; and finally ongoing system maintenance and process improvement after go-live.
+    </p>
+    <p>
+      Given that accounting and procurement staff weren't naturally familiar with SAP, the requirements
+      interviews weren't just about gathering specs — they also served as a communication and education
+      channel, helping users gradually understand the logic behind the new process and lowering
+      resistance and learning cost once the system actually went live.
+    </p>
+
+    <h2>Key Decisions &amp; Trade-offs</h2>
+    <div class="decision-block">
+      <h4>Decision</h4>
+      <p>
+        Prioritized getting accounting and procurement's core workflows (requisitions, payment requests,
+        GL posting, etc.) fully correct for go-live, and planned secondary or edge-case functionality to
+        be refined iteratively after launch.
+      </p>
+      <h4>Why</h4>
+      <p>
+        Accounting and procurement are the most fundamental, least-forgiving parts of daily operations —
+        if the core workflow broke at go-live, it would disrupt the company's entire operating rhythm.
+        Compared with chasing full feature coverage, locking down a stable, trustworthy core process
+        first was the lower-risk approach.
+      </p>
+      <h4>What we gave up</h4>
+      <p>
+        Some non-core features and process refinements had to wait until after go-live, meaning users
+        needed some temporary workarounds in the short term — in exchange for the core finance and
+        procurement processes standing on solid ground from day one.
+      </p>
+    </div>
+
+    <h2>Deliverables &amp; Impact</h2>
+    <h3>Deliverables</h3>
     <ul>
-      <li>Python</li>
-      <li>Domino REST API (DRAPI)</li>
-      <li>Claude AI API (semantic field-mapping inference)</li>
-      <li>SQL Server (UPSERT-based sync, soft-delete handling)</li>
-      <li>ETL pipelines for historical &amp; incremental data migration</li>
-      <li>Automated audit logging &amp; email alerting</li>
+      <li>SAP MM/FI/CO module implementation, replacing the legacy ERP system</li>
+      <li>An integration design and data flow between BPM and SAP</li>
+      <li>Requirements specifications and test cases for the accounting and procurement departments</li>
+      <li>A post-go-live system maintenance and process improvement mechanism</li>
     </ul>
 
-    <h2>Your Role</h2>
-    <p>
-      I designed and built the entire migration and sync platform, including the AI-assisted field
-      mapping process and the incremental sync architecture. I also coordinated with business owners
-      of each of the 300+ forms to review and validate the AI-generated mapping sheets before migration.
-    </p>
-
-    <h2>Impact / Metrics</h2>
+    <h3>Impact</h3>
     <ul class="impact-list">
-      <li>Automated migration of 300+ BPM forms without manual field-mapping effort</li>
-      <li>Enabled continuous, reliable sync between HCL Notes and SQL Server during transition</li>
-      <li>Reduced risk of data loss through checkpointing, soft-delete handling, and audit logging</li>
+      <li>SAP MM/FI/CO went live successfully, with accounting and procurement's core workflows fully transitioned from the legacy system to the new ERP</li>
+      <li>Established a working data integration flow between BPM and SAP, preventing the two systems from operating as separate silos</li>
+      <li>Lowered user resistance to the new system through structured interviews and communication, speeding up department-level adoption</li>
     </ul>
+
+    <h2>Lessons Learned</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>The hard part of an ERP rollout is rarely the system itself — it's whether users can
+        actually adopt and use it.</strong> Accounting and procurement's unfamiliarity with SAP meant
+        requirements interviews couldn't be a one-way spec-gathering exercise; they needed real effort
+        spent communicating and explaining why the new process was designed the way it was. With limited
+        time and resources, locking down the correctness of the core workflow first and leaving secondary
+        refinements for post-launch iteration was more pragmatic — and more likely to deliver on time and
+        reliably — than trying to get everything perfect in one shot.
+      </p>
+    </div>
 
     <h2>Tags</h2>
     <div class="tags">
-      <span class="tag">Python</span>
-      <span class="tag">Domino REST API (DRAPI)</span>
-      <span class="tag">Claude AI API</span>
-      <span class="tag">SQL Server</span>
-      <span class="tag">ETL</span>
-      <span class="tag">Data Migration</span>
-      <span class="tag">Process Automation</span>
+      <span class="tag">SAP</span>
+      <span class="tag">ERP</span>
+      <span class="tag">BPM</span>
+      <span class="tag">System Integration</span>
+      <span class="tag">Project Management</span>
+      <span class="tag">Requirements Analysis</span>
     </div>
 
   </div>

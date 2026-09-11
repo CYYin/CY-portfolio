@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KINPO SRM-ERP Order Integration Platform | Chang Yu Yin</title>
-<meta name="description" content="Project detail: KINPO SRM-ERP Order Integration Platform.">
+<title>HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform | Chang Yu Yin</title>
+<meta name="description" content="Project detail: HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
 <section class="detail-header">
   <div class="container">
     <a href="projects.html" class="back-link">&larr; Back to Projects</a>
-    <h1>KINPO SRM-ERP Order Integration Platform</h1>
+    <h1>HCL Notes to SQL Server BPM Data Migration &amp; Sync Platform</h1>
   </div>
 </section>
 
@@ -43,66 +43,134 @@
 <section>
   <div class="container detail-content">
 
-    <h2>Problem</h2>
+    <h2>Business Context &amp; Problem</h2>
     <p>
-      Purchase orders and order-change notifications between Kinpo's Supplier Open API and Sercomm's
-      internal SRM/ERP systems were not integrated, requiring manual review and entry. This created
-      delays in responding to order changes, increased the risk of missed deadlines within supplier
-      change windows, and made it difficult to evaluate order feasibility against production capacity
-      in a timely way.
+      Sercomm had 300+ BPM forms scattered across multiple HCL Notes 12 NSF databases. This historical
+      data was locked inside the Notes platform, unreachable for SQL-based reporting, analytics, or
+      cross-system integration, and some Notes applications were already headed for retirement with no
+      systematic way to preserve or migrate their data. These forms had also been built independently by
+      different departments over the years, with no unified documentation of field naming, semantics, or
+      data types. Manually inventorying and rebuilding schemas form-by-form at a scale of 300+ would have
+      been prohibitively costly and impossible to schedule reliably. What was needed was a scalable,
+      repeatable automation approach that could coexist with the live Notes system — historical import
+      plus ongoing incremental sync.
     </p>
 
-    <h2>Solution</h2>
+    <h2>My Role &amp; Key Challenges</h2>
     <p>
-      I built a full-stack order integration platform connecting Kinpo's Supplier Open API with
-      Sercomm's internal SRM and ERP systems. The platform ingests inbound purchase orders and
-      order-change (POC) notifications via signed API calls, then applies business rules — including
-      a 70-day change window and APS-based feasibility evaluation — to automatically generate accept,
-      change, or reject responses. Approved orders are synced into Oracle ERP through PL/SQL
-      MERGE/INSERT pipelines with per-record commit and retry logic to ensure reliability. The system
-      runs on FastAPI with Celery/Redis for asynchronous task orchestration, APScheduler for weekly
-      APS snapshot jobs, and maintains dual-database persistence — SQL Server for SRM data and Oracle
-      for ERP data — with automated error tracking, email alerting, and a Vue 3 admin dashboard for
-      order and log visibility.
+      <strong>My role:</strong> ETL / data migration platform developer — responsible for DRAPI
+      integration, designing the AI-assisted field-semantics analysis process, building out the SQL
+      Server/Oracle target side, and operating and debugging the ongoing incremental sync mechanism.
     </p>
 
-    <h2>Tech Stack</h2>
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>Stakeholders</h4>
+        <ul>
+          <li>Department business owners (field mapping review)</li>
+          <li>IT (database and network environment)</li>
+          <li>HCL Notes system administrators</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Constraints</h4>
+        <ul>
+          <li>Legacy Notes forms lacked documentation; field naming was inconsistent</li>
+          <li>Some forms had conditional fields (the same label resolving to different actual fields depending on an upstream selection)</li>
+          <li>Data was only reachable via DRAPI, with no direct access to the underlying NSF; mandatory business review meant the process couldn't be fully automated</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>Data migration: an Active View's definition could silently diverge from the actual data range, risking incomplete migrations if not verified per-form</li>
+          <li>AI accuracy: inferring Chinese/English mappings and data types across tens of thousands of fields still required human review to catch errors</li>
+          <li>Sync reliability: Notes' native unread/markRead mechanism was unreliable on some scopes, risking missed or duplicate read-marking</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Approach &amp; Solution</h2>
+    <p>The architecture followed a two-phase model: schema build → business review → data sync.</p>
     <ul>
-      <li>Python &amp; FastAPI</li>
-      <li>Celery &amp; Redis (async task orchestration)</li>
-      <li>APScheduler (scheduled APS snapshot jobs)</li>
-      <li>SQL Server (SRM data) &amp; Oracle (ERP data, PL/SQL MERGE/INSERT)</li>
-      <li>REST API Integration (signed API calls)</li>
-      <li>Vue 3 (admin dashboard)</li>
-      <li>Automated error tracking &amp; email alerting</li>
+      <li>Called the Domino REST API (DRAPI) form2view endpoint to retrieve each form's Active View field list.</li>
+      <li>Used the Claude AI API to semantically analyze fields in batches of 50, inferring Chinese/English mappings, data types, and Master/Detail structure, and producing a Column Mapping Excel sheet for business review.</li>
+      <li>Once approved, auto-generated and ran CREATE TABLE statements, using DXL (Notes Designer's exported form design files) to resolve keyword-field code-to-display-text mappings and handle multi-value fields (list-type → junction table, tag-type → comma-separated string).</li>
+      <li>After the full historical import, a scheduler triggered incremental sync by sync_group (hourly/daily/weekly/monthly): DRAPI's unreadOnly=true fetched unread documents, markRead=true marked them as read as a natural checkpoint/resume mechanism, and SQL Server/Oracle performed UPSERTs keyed on notes_unid with soft-delete support.</li>
+      <li>A central control table (Notes_System_List) drove the whole process through a Migration_Step state machine (0 → 1.1–1.9), keeping progress for all 300+ forms trackable and re-runnable.</li>
     </ul>
 
-    <h2>Your Role</h2>
-    <p>
-      I served as both project lead and lead developer, designing the system architecture end to end —
-      from API integration and business rule design to the database synchronization strategy and admin
-      dashboard. I worked closely with supply chain and ERP stakeholders to define the acceptance rules
-      and feasibility logic embedded in the platform.
-    </p>
+    <h2>Key Decisions &amp; Trade-offs</h2>
+    <div class="decision-block">
+      <h4>Decision</h4>
+      <p>Replace purely manual field-mapping work with "AI semantic analysis + human review."</p>
+      <p>
+        This dramatically shortened the inventory timeline for 300+ forms, at the cost of adding an
+        Excel review checkpoint (Migration_Step 1.5) to keep business sign-off in the loop — the process
+        couldn't run fully hands-off.
+      </p>
+      <h4>Other key trade-offs</h4>
+      <p>
+        The sync mechanism reused Notes' native unread/markRead behavior instead of building a separate
+        change-data-capture log: this saved development cost and naturally supported checkpoint/resume,
+        but markRead behavior was unreliable on some scopes (e.g. B011), requiring a separate recovery
+        script (recover_b011_failed_unids.py) to catch missed syncs.
+      </p>
+      <p>
+        When old and new Active Views conflicted, I chose the cleaner, more current view (e.g. M003 used
+        TESTEXPORT instead of the stale but fully-historical Form1View) — trading "one-shot full history
+        coverage" for correctness in the live sync data; when historical data was genuinely needed (e.g.
+        a 2023 lookup), I queried the old view live via DRAPI instead of polluting the production sync table.
+      </p>
+      <p>
+        Every migrated target table shares a standardized set of sync columns (notes_unid, notes_created,
+        notes_modified, is_deleted, etc.), letting the incremental sync engine be reused across 300+
+        tables — at the cost of needing ALTER TABLE on some legacy tables to add missing columns for
+        compatibility (e.g. a missing approver column).
+      </p>
+    </div>
 
-    <h2>Impact / Metrics</h2>
+    <h2>Deliverables &amp; Impact</h2>
+    <h3>Deliverables</h3>
+    <ul>
+      <li>A DRAPI client wrapper (token management, pagination, error retry)</li>
+      <li>A Claude AI field-semantics analysis pipeline (Chinese/English mapping, type inference, Master/Detail detection)</li>
+      <li>A Column Mapping Excel review workflow (pending review → approved → auto table creation)</li>
+      <li>A full initial import plus incremental sync engine (supporting SQL Server and Oracle as dual targets)</li>
+      <li>A central-control-table-driven migration state machine (Migration_Step 0–1.9)</li>
+      <li>Sync audit logging and failure alerting (notes_sync_log plus email notifications)</li>
+    </ul>
+
+    <h3>Impact</h3>
     <ul class="impact-list">
-      <li>Automated response generation for inbound purchase orders and order changes</li>
-      <li>Reduced manual review effort through rule-based accept/change/reject logic</li>
-      <li>Improved reliability of ERP synchronization with per-record commit and retry handling</li>
+      <li>Converted historical BPM data previously locked in Notes into SQL-queryable, report-ready structured data, enabling cross-system analysis</li>
+      <li>Eliminated the manual effort of designing schemas form-by-form — the AI-plus-review model dramatically accelerated field inventory across 300+ forms</li>
+      <li>Established a sustainable, near-real-time incremental sync mechanism rather than a one-time cutover</li>
+      <li>The framework proved extensible — already expanded to support Oracle as a target (e.g. the A011 system) and multiple coexisting systems (PartNumber, DWNotes, etc.)</li>
     </ul>
+
+    <h2>Lessons Learned</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>A legacy platform's "Active View" definition can silently drift from the actual data
+        range it covers</strong> — assumptions made before migration must be re-validated against the
+        live view at execution time, not trusted from an earlier schema snapshot. AI can dramatically
+        accelerate large-scale field-semantics analysis, but what actually makes an automated pipeline
+        trustworthy enough to ship is a mandatory human review checkpoint, not model accuracy alone.
+        Relying on a platform's native mechanism (like Notes' unread/read state) as a sync checkpoint is
+        convenient, but reliability varies by table — a sync system's design should focus on detecting
+        and recovering missed syncs, not just handling the happy path.
+      </p>
+    </div>
 
     <h2>Tags</h2>
     <div class="tags">
       <span class="tag">Python</span>
-      <span class="tag">FastAPI</span>
-      <span class="tag">Celery</span>
-      <span class="tag">Vue.js</span>
+      <span class="tag">Domino REST API (DRAPI)</span>
+      <span class="tag">Claude AI API</span>
       <span class="tag">SQL Server</span>
-      <span class="tag">Oracle</span>
-      <span class="tag">REST API Integration</span>
       <span class="tag">ETL</span>
-      <span class="tag">Business Rule Engine</span>
+      <span class="tag">Data Migration</span>
       <span class="tag">Process Automation</span>
     </div>
 

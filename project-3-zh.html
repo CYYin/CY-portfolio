@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BPM 系統轉型 | 尹昌敔</title>
-<meta name="description" content="專案詳情：BPM 系統轉型 — 從 Domino 到現代化網頁平台。">
+<title>SRM–ERP 訂單自動化同步系統 | 尹昌敔</title>
+<meta name="description" content="專案詳情：SRM–ERP 訂單自動化同步系統。">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
 <section class="detail-header">
   <div class="container">
     <a href="projects-zh.html" class="back-link">&larr; 返回專案作品</a>
-    <h1>BPM 系統轉型 — 從 Domino 到現代化網頁平台</h1>
+    <h1>SRM–ERP 訂單自動化同步系統</h1>
   </div>
 </section>
 
@@ -43,52 +43,114 @@
 <section>
   <div class="container detail-content">
 
-    <h2>問題</h2>
-    <p>
-      公司核心的 BPM 生態系統已在 HCL Domino 上運行多年，累積了大量對業務至關重要的
-      資料與流程，但維護成本日益提高，擴充也愈發困難。此平台與現代系統的整合選項有限，
-      隨著組織數位轉型計畫的擴展，也愈來愈難以支撐系統的擴展需求。
+    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 32px;">
+      角色：Project Manager　｜　系統：SRM（MSSQL）↔ ERP（Oracle）　｜　協作：跨部門、跨國團隊
     </p>
 
-    <h2>解決方案</h2>
+    <h2>背景與問題</h2>
     <p>
-      我主導了既有 HCL Domino BPM 生態系統的現代化工程，將業務資料與流程遷移至
-      現代化、可擴展的平台架構。新架構以 SQL Server 作為資料儲存層、Vue.js 打造前端體驗，
-      並以 Python 為基礎的 API 與微服務處理商業邏輯與系統整合。此次轉型使組織得以
-      擺脫封閉的既有平台，邁向開放、可維護且具擴充性的系統架構。
+      訂單資料長期仰賴人工在 SRM 與 ERP 兩端系統之間重複鍵入。業務部門實際反映，
+      逐筆手動鍵單耗時且容易出錯，是流程中最大的效率瓶頸——這也是本專案啟動的直接原因。
     </p>
-
-    <h2>技術棧</h2>
+    <p>問題造成的實際影響：</p>
     <ul>
-      <li>HCL Domino（既有來源系統）</li>
-      <li>SQL Server</li>
-      <li>Vue.js</li>
-      <li>Python</li>
-      <li>REST API 與微服務</li>
+      <li><strong>交期延誤</strong>——人工作業速度跟不上訂單量</li>
+      <li><strong>人力成本高</strong>——需投入大量人時逐筆處理</li>
+      <li><strong>容易出錯漏單</strong>——人工鍵入的固有風險</li>
+      <li><strong>業務部門加班</strong>——尖峰期間難以消化工作量</li>
     </ul>
 
-    <h2>我的角色</h2>
+    <h2>角色與挑戰</h2>
     <p>
-      身為專案經理，我訂定了遷移策略與架構方向，協調既有系統專家與新開發團隊之間的合作，
-      並管理分階段上線以降低對業務營運的衝擊。我全程負責確保遷移過程中的資料完整性，
-      並確保新平台與長期 IT 架構目標一致。
+      <strong>擔任角色：</strong>Project Manager，統籌需求釐清、跨團隊協作與系統上線，
+      是連接業務需求與技術實作的關鍵角色。
     </p>
 
-    <h2>成效／指標</h2>
-    <ul class="impact-list">
-      <li>成功將核心 BPM 流程從難以維護的既有平台遷出</li>
-      <li>建立現代化、以 API 為核心的架構，為未來整合做好準備</li>
-      <li>提升系統可維護性，降低對既有 Domino 專業人力的依賴</li>
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>利害關係人</h4>
+        <ul>
+          <li>業務部門</li>
+          <li>IT／資訊部門</li>
+          <li>客戶端 SRM 系統窗口</li>
+          <li>菲律賓開發同仁</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>限制條件</h4>
+        <ul>
+          <li>時程壓力</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>風險</h4>
+        <ul>
+          <li>最大的挑戰並非技術本身，而是時程壓力與跨公司、跨團隊的溝通——需同時對齊業務部門的期待、IT 端的系統規範、客戶端 SRM 窗口的資料規則，以及與菲律賓開發團隊之間的協作節奏</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>方法與解法</h2>
+    <p>
+      解法是建置一套自動化訂單同步系統，以系統整合取代人工鍵單，讓訂單資料能在
+      SRM 與 ERP 之間可靠地自動流轉。
+    </p>
+    <p>
+      <strong>架構：</strong>SRM（MSSQL）→ 同步引擎（FastAPI 中介層）→ ERP（Oracle），
+      中介層同時運作「排程比對」與「即時事件同步」兩種機制，並提供前台介面供人工查核例外狀況。
+    </p>
+    <p>
+      <strong>技術組成：</strong>FastAPI / Python、Oracle + MSSQL 雙資料庫整合、React / Vite 前端、排程 Scheduler
+    </p>
+    <p>
+      本專案未使用 AI 輔助開發，整體架構與程式由團隊人工設計與實作。
+    </p>
+
+    <h2>關鍵決策與取捨</h2>
+    <div class="decision-block">
+      <h4>決策</h4>
+      <p>同時實作「排程比對」與「即時事件同步」兩種機制，而非僅擇一，以兼顧資料時效性與完整性。</p>
+      <h4>代價</h4>
+      <p>
+        雙機制並行使開發時程明顯拉長——在時程壓力已是最大限制的情況下，仍選擇不犧牲系統的可靠度。
+      </p>
+    </div>
+
+    <h2>成果與效益</h2>
+    <h3>交付項目</h3>
+    <ul>
+      <li>SRM–ERP 自動化訂單同步系統——取代人工逐筆鍵單的核心系統</li>
+      <li>前台管理介面——供業務／IT 人員查看同步狀態、處理例外資料</li>
+      <li>跨部門、跨國協作流程——與菲律賓開發團隊、客戶端 SRM 窗口建立的協作機制</li>
     </ul>
+
+    <h3>實際效益</h3>
+    <ul class="impact-list">
+      <li>大幅減少鍵單時間——自動化同步取代人工逐筆鍵入，釋放業務部門大量重複性工時</li>
+      <li>業務部門不再加班——尖峰訂單量不再倚賴人力堆積工時消化</li>
+      <li>人為錯誤與漏單減少——移除人工鍵入環節，同時降低錯誤與漏單風險</li>
+    </ul>
+
+    <h2>心得反思</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>跨國、跨部門的溝通，比技術實作本身更難。</strong>與菲律賓開發團隊、客戶端 SRM
+        窗口協作過程中，真正的挑戰在於對齊認知與期待，而不是寫程式——溝通成本往往才是專案時程的關鍵變數。
+        時程壓力下的優先順序取捨，是專案成敗的關鍵能力：在資源與時間有限的情況下，判斷哪些機制必須優先到位、
+        哪些可以後續迭代完善，比單純追求技術完美更能決定專案能否準時、穩定交付。
+      </p>
+    </div>
 
     <h2>標籤</h2>
     <div class="tags">
-      <span class="tag">BPM</span>
-      <span class="tag">HCL Domino</span>
-      <span class="tag">SQL Server</span>
-      <span class="tag">Vue.js</span>
+      <span class="tag">Project Management</span>
+      <span class="tag">FastAPI</span>
       <span class="tag">Python</span>
-      <span class="tag">微服務</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">Oracle</span>
+      <span class="tag">React</span>
+      <span class="tag">系統整合</span>
+      <span class="tag">流程自動化</span>
     </div>
 
   </div>

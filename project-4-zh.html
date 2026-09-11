@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>金仁寶 SRM-ERP 訂單整合平台 | 尹昌敔</title>
-<meta name="description" content="專案詳情：金仁寶 SRM-ERP 訂單整合平台。">
+<title>HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台 | 尹昌敔</title>
+<meta name="description" content="專案詳情：HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台。">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
 <section class="detail-header">
   <div class="container">
     <a href="projects-zh.html" class="back-link">&larr; 返回專案作品</a>
-    <h1>金仁寶 SRM-ERP 訂單整合平台</h1>
+    <h1>HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台</h1>
   </div>
 </section>
 
@@ -43,62 +43,120 @@
 <section>
   <div class="container detail-content">
 
-    <h2>問題</h2>
+    <h2>背景與問題</h2>
     <p>
-      金仁寶（Kinpo）供應商開放 API 與 Sercomm 內部 SRM/ERP 系統之間，
-      採購單與訂單變更通知並未整合，需要人工審核與登錄。這不僅拖慢了對訂單變更的
-      回應速度，也提高了在供應商變更期限內延誤處理的風險，更難以即時評估訂單
-      是否符合產能可行性。
+      Sercomm 內部有 300+ 張 BPM 表單分散在多個 HCL Notes 12 的 NSF 檔案中，歷史資料被鎖在 Notes 平台裡，
+      無法用 SQL 做報表、分析或跨系統整合，且部分 Notes 應用逐步走向汰換，缺乏系統化的資料保存與遷移機制。
+      同時，這些表單長年由不同部門各自建置，欄位命名、語意、資料型別皆無統一文件，若採人工方式逐表盤點與建表，
+      在 300+ 張規模下成本過高、時程不可控。因此需要一套可規模化、可重複執行、並能與現行 Notes 系統並存運作
+      （歷史匯入 + 持續增量同步）的自動化資料移轉方案。
     </p>
 
-    <h2>解決方案</h2>
+    <h2>角色與挑戰</h2>
     <p>
-      我建構了一套全端訂單整合平台，串接金仁寶供應商開放 API 與 Sercomm 內部
-      SRM、ERP 系統。平台透過簽章 API 呼叫接收進來的採購單與訂單變更（POC）通知，
-      並套用商業規則 — 包含 70 天變更期限與基於 APS 的可行性評估 — 自動產生
-      接受、變更或拒絕的回應。核准的訂單透過 PL/SQL MERGE/INSERT 管線同步至
-      Oracle ERP，並具備逐筆提交與重試機制以確保可靠性。系統以 FastAPI 為核心，
-      搭配 Celery/Redis 進行非同步任務調度、APScheduler 執行每週 APS 快照工作，
-      並維持雙資料庫架構 — SQL Server 儲存 SRM 資料、Oracle 儲存 ERP 資料 —
-      同時具備自動化錯誤追蹤、Email 警示，以及供訂單與日誌檢視的 Vue 3 管理後台。
+      <strong>擔任角色：</strong>ETL / 資料移轉系統開發者，負責 DRAPI 整合、AI 輔助欄位語意分析流程設計、
+      SQL Server／Oracle 目標端建置，以及後續增量同步機制的維運與除錯。
     </p>
 
-    <h2>技術棧</h2>
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>利害關係人</h4>
+        <ul>
+          <li>各部門業務窗口（表單欄位審核）</li>
+          <li>IT（DB 與網路環境）</li>
+          <li>HCL Notes 系統管理員</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>限制條件</h4>
+        <ul>
+          <li>Legacy Notes 表單缺乏文件、欄位命名不一致</li>
+          <li>部分表單有條件式欄位（同一標籤依上層選項分岔出不同實際欄位）</li>
+          <li>僅能透過 DRAPI 讀取，無法直接存取底層 NSF；業務審核為必要關卡，流程無法全自動化</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>風險</h4>
+        <ul>
+          <li>Data migration：Active View 定義與實際資料範圍可能不一致，未逐一驗證容易誤判資料完整性</li>
+          <li>AI accuracy：對上萬欄位做中英文對應與型別推斷，仍需人工審核把關</li>
+          <li>Sync reliability：Notes 原生 unread／markRead 機制在部分 scope 上不穩定，可能漏抓或重複標記</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>方法與解決方案</h2>
+    <p>採「Schema 建置 → 業務審核 → 資料同步」兩階段架構：</p>
     <ul>
-      <li>Python 與 FastAPI</li>
-      <li>Celery 與 Redis（非同步任務調度）</li>
-      <li>APScheduler（排程式 APS 快照工作）</li>
-      <li>SQL Server（SRM 資料）與 Oracle（ERP 資料，PL/SQL MERGE/INSERT）</li>
-      <li>REST API 整合（簽章 API 呼叫）</li>
-      <li>Vue 3（管理後台）</li>
-      <li>自動化錯誤追蹤與 Email 警示</li>
+      <li>透過 Domino REST API (DRAPI) 呼叫 form2view 端點取得各表單 Active View 欄位清單。</li>
+      <li>用 Claude AI API 對欄位做語意分析（每批 50 欄），自動推斷中英文對應、資料型別、Master/Detail 結構，產出 Column Mapping Excel 供業務人員審核。</li>
+      <li>審核通過後自動產生 CREATE TABLE 並建表，搭配 DXL（Notes Designer 匯出的表單設計檔）解析 keyword 欄位的代碼→顯示文字對應表，處理多值欄位（清單型→Junction Table／標籤型→逗號分隔字串）。</li>
+      <li>全量初始匯入後，排程依 sync_group（hourly/daily/weekly/monthly）觸發增量同步：以 DRAPI unreadOnly=true 取得未讀文件清單、markRead=true 標記已讀作為天然斷點續傳機制，SQL Server / Oracle 端以 notes_unid 做 UPSERT，並支援軟刪除。</li>
+      <li>以中央控制表 Notes_System_List 的 Migration_Step（0 → 1.1~1.9）狀態機貫穿整個流程，讓 300+ 張表單的進度可追蹤、可重跑。</li>
     </ul>
 
-    <h2>我的角色</h2>
-    <p>
-      我同時擔任專案負責人與主要開發者，從 API 整合、商業規則設計到資料庫同步策略
-      與管理後台，全程主導系統架構設計。我也與供應鏈及 ERP 相關利害關係人密切合作，
-      共同訂定平台內建的接受規則與可行性判斷邏輯。
-    </p>
+    <h2>關鍵決策與取捨</h2>
+    <div class="decision-block">
+      <h4>決策</h4>
+      <p>以「AI 語意分析 + 人工審核」取代純人工建欄位對照表。</p>
+      <p>
+        換取大幅縮短 300+ 張表單的盤點時程，代價是必須額外設計 Excel 審核關卡（Migration_Step 1.5）
+        確保業務把關，流程無法全自動跑完。
+      </p>
+      <h4>其他關鍵取捨</h4>
+      <p>
+        同步機制沿用 Notes 原生 unread/markRead，而非另建變更日誌（CDC）：省去額外開發成本並天然支援斷點續傳，
+        但部分 scope（如 B011）markRead 行為不可靠，需另外寫回補腳本（如 recover_b011_failed_unids.py）處理漏同步。
+      </p>
+      <p>
+        遇到新舊 Active View 衝突時，選擇資料品質較新、較乾淨的 View（如 M003 選用 TESTEXPORT 而非全歷史但
+        stale 的 Form1View）：犧牲了「一次到位涵蓋全歷史」，換取同步資料的正確性；當真的需要歷史資料
+        （如 2023 年查詢）時，改用即時 DRAPI 查詢舊 View 補足，而非污染正式同步表。
+      </p>
+      <p>
+        所有遷移目標表統一標準同步欄位（notes_unid／notes_created／notes_modified／is_deleted…）：換取增量同步
+        引擎可跨 300+ 張表重用，代價是部分舊版表需額外 ALTER TABLE 補欄位才能相容（如缺 approver）。
+      </p>
+    </div>
 
-    <h2>成效／指標</h2>
+    <h2>交付物與價值</h2>
+    <h3>交付物</h3>
+    <ul>
+      <li>DRAPI 封裝客戶端（Token 管理、分頁、錯誤重試）</li>
+      <li>Claude AI 欄位語意分析 pipeline（中英文對應、型別推斷、Master/Detail 判斷）</li>
+      <li>Column Mapping Excel 審核工作流（待審核 → 已審核 → 自動建表）</li>
+      <li>全量初始匯入 + 增量同步引擎（支援 SQL Server、Oracle 雙目標）</li>
+      <li>中央控制表驅動的移轉狀態機（Migration_Step 0~1.9）</li>
+      <li>同步稽核紀錄與異常告警（notes_sync_log + email 通知）</li>
+    </ul>
+
+    <h3>價值</h3>
     <ul class="impact-list">
-      <li>自動產生進單採購單與訂單變更的回應</li>
-      <li>透過規則式的接受／變更／拒絕邏輯，大幅降低人工審核工作量</li>
-      <li>以逐筆提交與重試機制提升 ERP 同步的可靠性</li>
+      <li>將原本鎖在 Notes 平台的歷史 BPM 資料轉為可用 SQL 查詢／報表的結構化資料，支援跨系統分析</li>
+      <li>省去逐表人工設計 schema 的工時，AI + 人工審核模式讓 300+ 張表單的欄位盤點大幅加速</li>
+      <li>建立可持續運作的近即時增量同步機制，而非一次性搬遷</li>
+      <li>框架具擴充性，已延伸支援 Oracle 目標端（如 A011 系統）及多套系統（PartNumber、DWNotes 等）並存同步</li>
     </ul>
+
+    <h2>體悟</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>Legacy 平台的「Active View」定義可能與實際資料範圍悄悄脫鉤</strong>——遷移前的假設，
+        必須在執行當下重新對照現行 View，而非只信任先前的 schema 快照。AI 能大幅加速大規模欄位語意分析，
+        但真正讓自動化流程能被信任、能上線的關鍵，是強制的人工審核關卡，而不是模型準確率本身。
+        把平台原生機制（如 Notes 的 unread/已讀狀態）當作同步斷點雖然省事，但可靠性因表而異，
+        同步系統的設計重點應放在「偵測與回補漏同步」，而非只處理正常路徑。
+      </p>
+    </div>
 
     <h2>標籤</h2>
     <div class="tags">
       <span class="tag">Python</span>
-      <span class="tag">FastAPI</span>
-      <span class="tag">Celery</span>
-      <span class="tag">Vue.js</span>
+      <span class="tag">Domino REST API (DRAPI)</span>
+      <span class="tag">Claude AI API</span>
       <span class="tag">SQL Server</span>
-      <span class="tag">Oracle</span>
-      <span class="tag">REST API 整合</span>
       <span class="tag">ETL</span>
-      <span class="tag">商業規則引擎</span>
+      <span class="tag">資料遷移</span>
       <span class="tag">流程自動化</span>
     </div>
 

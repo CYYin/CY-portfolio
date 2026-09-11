@@ -43,46 +43,115 @@
 <section>
   <div class="container detail-content">
 
-    <h2>Problem</h2>
+    <h2>Business Context &amp; Problem</h2>
     <p>
-      Finance and accounting teams needed daily and monthly exchange rates from multiple Taiwanese
-      bank and government sources to support reporting and reconciliation. Collecting these rates
-      manually was slow, error-prone, and consumed over 30 minutes of staff time each day — time that
-      scaled poorly as more source systems and downstream reports were added.
+      Finance and operations staff previously had to manually check multiple bank and government
+      websites (Central Bank of the ROC, Bank of Taiwan, the customs portal, CNYES) to look up daily
+      and 10-day (旬) FX rates, then manually key them into the GL system — roughly 30 minutes per run.
+      This manual process also required staff to log in on weekends and holidays whenever a rate needed
+      updating, creating a recurring overtime burden. The goal was to eliminate this manual, repetitive
+      workload by automating the entire lookup-to-entry pipeline.
     </p>
 
-    <h2>Solution</h2>
+    <h2>My Role &amp; Key Challenges</h2>
     <p>
-      I built an end-to-end exchange rate automation system that scrapes daily and monthly rates from
-      multiple bank and government websites, handling anti-bot measures using Selenium and Playwright.
-      The system upserts the collected data into both SQL Server and Oracle databases through
-      MERGE-based ETL pipelines, ensuring consistency across systems. It then automatically generates
-      Excel reports and sends email notifications to relevant stakeholders, removing the need for any
-      manual data collection or report assembly.
+      <strong>My role:</strong> Automation Engineer / Developer — solely responsible for end-to-end
+      design, development, and deployment of the pipeline, using AI-assisted development (Claude Code)
+      alongside Python.
     </p>
 
-    <h2>Tech Stack</h2>
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>Stakeholders</h4>
+        <ul>
+          <li>Finance / GL team (data consumers)</li>
+          <li>Management (project sponsor / oversight)</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Constraints</h4>
+        <ul>
+          <li>No shared codebase/module — each script self-contained by design</li>
+          <li>Heterogeneous data sources, each with different scraping methods and reliability</li>
+          <li>No automated test suite; differing DB client libraries across scripts (pymssql/pyodbc, Oracle thick/thin mode)</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>Source websites changing structure or adding bot detection could silently break scrapers</li>
+          <li>Oracle write performance/reliability</li>
+          <li>Missing-data days needing correct fallback logic instead of hard-failing the pipeline</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Approach &amp; Solution</h2>
     <ul>
-      <li>Python</li>
-      <li>Selenium &amp; Playwright (web scraping, anti-bot handling)</li>
-      <li>SQL Server &amp; Oracle (MERGE-based ETL pipelines)</li>
-      <li>Excel report generation</li>
-      <li>Automated email notifications</li>
+      <li>Prioritized stable structured endpoints (CSV/JSON APIs) over UI scraping wherever a source offered them (CBC, TCB CSV API, customs portal JSON), reserving Selenium/Playwright for sources that only render via JavaScript (CNYES).</li>
+      <li>Built Playwright-based screenshot capture with a real Chrome user-agent, domcontentloaded wait, and explicit selector wait to bypass Bank of Taiwan's Akamai bot challenge, preserving audit-proof screenshots without blocking the pipeline.</li>
+      <li>Implemented idempotent MERGE-based upserts into the SQL Server GL interface table, writing bidirectional rate pairs (e.g. USD→TWD and TWD→USD) plus USD-based cross-rate derivation.</li>
+      <li>Added a config-driven multi-target Oracle insert layer (oracle_active_env / oracle_insert_targets) so a single run can fan out writes across UAT/Test/Prod Oracle environments without duplicating scripts.</li>
+      <li>Built automated Excel report generation and email notification (separate success/failure recipient lists) so the finance team gets visibility without checking logs.</li>
+      <li>Containerized the pipeline with Docker and scheduled it to run automatically — daily for bank rates, every 10 days for portal/monthly-basis rates — removing the need for manual weekend/holiday intervention.</li>
+      <li>Used AI-assisted development (Claude Code) throughout for rapid iteration when diagnosing bot-detection failures, Oracle write issues, and cross-rate calculation bugs.</li>
     </ul>
 
-    <h2>Your Role</h2>
-    <p>
-      I designed and built the full automation pipeline end to end — from source scraping logic to
-      database integration and report distribution. I also identified the source systems in coordination
-      with finance stakeholders and defined the business rules for data validation and exception handling.
-    </p>
+    <h2>Key Decisions &amp; Trade-offs</h2>
+    <div class="decision-block">
+      <h4>Decision</h4>
+      <p>Kept each Import*.py script fully self-contained rather than extracting a shared module.</p>
+      <h4>Why</h4>
+      <p>
+        With no test suite and a solo maintainer, a bug in a shared module could have silently broken
+        all pipelines at once. Trading long-term DRY-ness for lower regression risk was the safer call.
+      </p>
+      <h4>What we gave up</h4>
+      <p>
+        Some code duplication across scripts — accepted in exchange for isolating failures so a bug in
+        one pipeline can't cascade into the others.
+      </p>
+      <p>
+        Two more decisions followed the same logic: choosing CSV/JSON API scraping over Selenium
+        wherever possible (extra up-front effort to find stable API endpoints, in exchange for materially
+        more reliable, faster runs long-term), and using a lookback fallback instead of hard-failing on
+        missing rate days (favoring pipeline continuity over strict same-day data freshness, so a
+        temporary source outage wouldn't block downstream GL posting). Config-driven multi-environment
+        Oracle writes added some config complexity in exchange for eliminating duplicated insert logic
+        across UAT/Prod.
+      </p>
+    </div>
 
-    <h2>Impact / Metrics</h2>
+    <h2>Deliverables &amp; Impact</h2>
+    <h3>Deliverables</h3>
+    <ul>
+      <li>Automated FX rate ingestion pipeline (3 scripts) covering 11 currencies from 4 data sources</li>
+      <li>SQL Server + Oracle dual-write GL interface integration with multi-environment support</li>
+      <li>Auto-generated Excel reports with inline screenshot audit trail</li>
+      <li>Success/failure email notification system</li>
+      <li>Dockerized, scheduled deployment (daily + 10-day cycles)</li>
+    </ul>
+
+    <h3>Impact</h3>
     <ul class="impact-list">
-      <li>Reduced daily manual processing time from 30+ minutes to under 5 minutes</li>
-      <li>Eliminated manual data entry errors across multiple bank and government sources</li>
-      <li>Standardized exchange rate data across SQL Server and Oracle systems</li>
+      <li>Reduced manual FX rate lookup-and-entry time from ~30 minutes to ~5 minutes per run (~83% reduction)</li>
+      <li>Fully automated daily and 10-day (旬) rate cycles, eliminating weekend/holiday manual maintenance work entirely</li>
+      <li>Highly stable in production: only 2 incidents in 6 months since go-live (an Oracle write performance anomaly, and a Bank of Taiwan website redesign) — both diagnosed and resolved quickly via AI-assisted debugging</li>
     </ul>
+
+    <h2>Lessons Learned</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>Automating around third-party websites is an ongoing maintenance commitment, not a
+        one-time build.</strong> Even a stable pipeline hit a source website redesign within 6 months,
+        and AI-assisted iteration made recovering from it fast rather than disruptive. Keeping scripts
+        self-contained — accepting some duplication over premature shared abstractions — paid off in
+        practice: with no test suite and a solo maintainer, only 2 incidents occurred in 6 months, and
+        neither cascaded across pipelines. Ultimately, the highest-value outcome wasn't the automation
+        logic itself, but removing a recurring human dependency — weekend/holiday manual rate
+        maintenance — which had been the real operational pain point.
+      </p>
+    </div>
 
     <h2>Tags</h2>
     <div class="tags">

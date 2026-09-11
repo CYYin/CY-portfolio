@@ -4,17 +4,19 @@ Personal portfolio site for an AI & Digital Transformation Project Manager. Pure
 
 ## Structure
 
-- `index.html` — Home
-- `about.html` — Bio, skills, timeline
-- `projects.html` — All 6 projects
-- `project-1.html` … `project-6.html` — Project detail pages
-- `contact.html` — Contact info
+Bilingual site: every page has an English version and a `-zh` Traditional Chinese version (e.g. `about.html` / `about-zh.html`), linked via the EN/中文 switcher in the navbar.
+
+- `index.html` / `index-zh.html` — Home
+- `about.html` / `about-zh.html` — Bio, skills, timeline
+- `projects.html` / `projects-zh.html` — All 5 projects
+- `project-1.html` … `project-5.html` (+ `-zh` versions) — Project detail pages
+- `contact.html` / `contact-zh.html` — Contact info, resume downloads, QR codes to the site
 - `styles.css` — Shared stylesheet (light theme, color variables at the top)
 - `script.js` — Mobile nav toggle
 
 ## Things to still edit
 
-- `about.html` — fill in `[Previous Role 1, Company]` / `[Previous Role 2, Company]` and their `[YEARS]` in the timeline section.
+- `contact.html` / `contact-zh.html` — add your resume PDFs at `resume-en.pdf` and `resume-zh.pdf` in the repo root (same folder as `index.html`) so the download buttons work. Until those files exist, the download links will 404.
 
 ## Deploy to GitHub Pages
 

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台 | 尹昌敔</title>
-<meta name="description" content="專案詳情：HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台。">
+<title>SAP ERP 導入與 BPM 系統整合 | 尹昌敔</title>
+<meta name="description" content="專案詳情：SAP ERP（MM/FI/CO）導入與 BPM 系統整合。">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
 <section class="detail-header">
   <div class="container">
     <a href="projects-zh.html" class="back-link">&larr; 返回專案作品</a>
-    <h1>HCL Notes 至 SQL Server 的 BPM 資料遷移與同步平台</h1>
+    <h1>SAP ERP 導入與 BPM 系統整合</h1>
   </div>
 </section>
 
@@ -43,60 +43,118 @@
 <section>
   <div class="container detail-content">
 
-    <h2>問題</h2>
-    <p>
-      超過 300 個 BPM 表單、累積了多年的歷史業務資料，存放在 HCL Notes 12 這套
-      報表與整合能力有限的既有平台上。若以人工方式將這麼大量的表單 — 每個表單
-      皆有不同的欄位結構、雙語標籤與主從（Master/Detail）關聯 — 遷移至現代化資料庫，
-      勢必極為耗時且容易出錯，而業務單位也需要在轉換期間讓新舊系統保持同步。
+    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 32px;">
+      角色：Project Manager　｜　範疇：ERP（SAP MM/FI/CO）與 BPM 整合　｜　部門：會計、採購
     </p>
 
-    <h2>解決方案</h2>
+    <h2>背景與問題</h2>
     <p>
-      我建構了一套端到端的資料遷移與同步平台，透過 Domino REST API（DRAPI）
-      自動化 300 多個 BPM 表單從 HCL Notes 12 遷移至 SQL Server 的歷史資料遷移作業。
-      平台運用 Claude AI API 進行語意推論以判斷欄位對應關係 — 協調中英文標籤、
-      資料型別與主從結構的差異 — 並在資料實際搬移前自動產出 Excel 對應表供業務審核。
-      對應表確認後，系統會自動在 SQL Server 建立目標資料表，並執行完整歷史資料匯入。
-      為了讓兩套系統在轉換期間持續保持一致，我也建置了持續性的增量同步機制，
-      包含未讀文件檢查點（unread-document checkpointing）、依 notes_unid 執行
-      新增／更新的 SQL Server UPSERT 邏輯、軟刪除（soft-delete）處理，
-      以及具備失敗 Email 警示的同步稽核紀錄。
+      公司原有的 ERP 系統已老舊，難以持續支援會計與採購部門日益複雜的流程需求，
+      因此啟動 ERP 現代化專案，引進 SAP（MM/FI/CO 模組）取代舊系統。
+      由於公司同時運行 BPM 系統處理內部簽核與作業流程，此次導入不只是單純的
+      系統更換，還必須確保 BPM 與新 SAP 系統之間的資料與流程能正確銜接，
+      避免產生新的資訊孤島或重複作業。
     </p>
 
-    <h2>技術棧</h2>
+    <h2>角色與挑戰</h2>
+    <p>
+      <strong>擔任角色：</strong>Project Manager，橫跨專案全流程 — 從需求訪談與流程分析、
+      BPM 與 SAP 之間的系統整合規劃，到 UAT／整合測試協調，以及上線後的系統維護與改善。
+    </p>
+
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>利害關係人</h4>
+        <ul>
+          <li>會計部門（財務流程需求方）</li>
+          <li>採購部門（採購流程需求方）</li>
+          <li>IT／系統整合團隊</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>限制條件</h4>
+        <ul>
+          <li>時程壓力，需在有限時間內完成需求訪談、系統整合與測試</li>
+          <li>需同時協調多個部門的需求與優先順序</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>風險</h4>
+        <ul>
+          <li>會計、採購部門對 SAP 不熟悉，使用者接受度是導入成敗的關鍵變數</li>
+          <li>BPM 與 SAP 之間的欄位、流程邏輯差異大，資料映射與整合設計難度高</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>方法與解決方案</h2>
+    <p>
+      專案採取由需求到落地的完整流程：先與會計、採購部門逐一進行需求訪談，
+      釐清現有流程與 SAP MM/FI/CO 模組之間的落差；接著規劃 BPM 與 SAP 之間的
+      系統整合方式，設計兩套系統間的資料整合流程；再透過整合測試與 UAT
+      驗證流程正確性，最後在上線後持續進行系統維護與流程改善。
+    </p>
+    <p>
+      面對會計、採購部門並非天生熟悉 SAP 的現實，需求訪談不只是蒐集規格，
+      也同時扮演溝通與教育的角色 — 讓使用者在訪談過程中逐步理解新流程的邏輯，
+      降低正式上線後的抵觸與學習成本。
+    </p>
+
+    <h2>關鍵決策與取捨</h2>
+    <div class="decision-block">
+      <h4>決策</h4>
+      <p>
+        優先確保會計與採購的核心流程（如請購、請款、總帳過帳等關鍵作業）在 SAP
+        上線時完全正確，次要或邊緣情境的功能則規劃在上線後逐步優化。
+      </p>
+      <h4>為什麼</h4>
+      <p>
+        會計與採購是公司日常營運最基礎、也最不能出錯的環節，一旦核心流程在上線初期
+        出狀況，影響的是整個公司的營運節奏；相較於追求功能的完整覆蓋，先確保核心
+        流程穩定可信賴，是風險更低的做法。
+      </p>
+      <h4>犧牲了什麼</h4>
+      <p>
+        部分非核心功能與流程優化必須延後到上線後才處理，短期內使用者可能需要
+        搭配一些暫時性的變通做法，但換來的是核心財務、採購流程在上線當下就站穩腳步。
+      </p>
+    </div>
+
+    <h2>交付物與價值</h2>
+    <h3>交付物</h3>
     <ul>
-      <li>Python</li>
-      <li>Domino REST API (DRAPI)</li>
-      <li>Claude AI API（語意欄位對應推論）</li>
-      <li>SQL Server（UPSERT 式同步、軟刪除處理）</li>
-      <li>歷史與增量資料遷移的 ETL 管線</li>
-      <li>自動化稽核紀錄與 Email 警示</li>
+      <li>SAP MM/FI/CO 模組導入，取代原有 ERP 系統</li>
+      <li>BPM 與 SAP 之間的系統整合方案與資料整合流程</li>
+      <li>會計、採購部門的需求規格文件與測試案例</li>
+      <li>上線後的系統維護與流程改善機制</li>
     </ul>
 
-    <h2>我的角色</h2>
-    <p>
-      我設計並建構了整套遷移與同步平台，包含 AI 輔助欄位對應流程與增量同步架構。
-      我也與這 300 多個表單各自的業務負責人協調，於遷移前逐一審核並確認
-      AI 產出的對應表。
-    </p>
-
-    <h2>成效／指標</h2>
+    <h3>價值</h3>
     <ul class="impact-list">
-      <li>自動完成 300 多個 BPM 表單的遷移，無需人工進行欄位對應</li>
-      <li>在轉換期間實現 HCL Notes 與 SQL Server 之間持續且可靠的同步</li>
-      <li>透過檢查點機制、軟刪除處理與稽核紀錄降低資料遺失風險</li>
+      <li>SAP MM/FI/CO 順利上線，會計與採購核心流程成功由舊系統轉換至新 ERP</li>
+      <li>建立 BPM 與 SAP 之間可運作的資料整合流程，避免兩套系統各自為政</li>
+      <li>透過訪談與溝通降低使用者對新系統的抵觸，加速部門端的上手速度</li>
     </ul>
+
+    <h2>體悟</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>ERP 導入的困難，往往不在系統本身，而在使用者能不能真正接受並用起來。</strong>
+        會計與採購部門對 SAP 陌生，代表需求訪談不能只是單向蒐集規格，更要花心力
+        溝通與說明，讓使用者理解新流程「為什麼」要這樣設計。在資源與時程有限的情況下，
+        先守住核心流程的正確性、把次要優化留到上線後迭代，是比追求一次到位更務實、
+        也更能確保專案準時穩定交付的做法。
+      </p>
+    </div>
 
     <h2>標籤</h2>
     <div class="tags">
-      <span class="tag">Python</span>
-      <span class="tag">Domino REST API (DRAPI)</span>
-      <span class="tag">Claude AI API</span>
-      <span class="tag">SQL Server</span>
-      <span class="tag">ETL</span>
-      <span class="tag">資料遷移</span>
-      <span class="tag">流程自動化</span>
+      <span class="tag">SAP</span>
+      <span class="tag">ERP</span>
+      <span class="tag">BPM</span>
+      <span class="tag">系統整合</span>
+      <span class="tag">Project Management</span>
+      <span class="tag">需求分析</span>
     </div>
 
   </div>

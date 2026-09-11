@@ -97,6 +97,54 @@
         </div>
       </div>
     </div>
+
+    <!-- ============ RESUME DOWNLOADS ============ -->
+    <!-- EDIT: 請將履歷 PDF 放在此路徑：resume-en.pdf, resume-zh.pdf -->
+    <h2 class="contact-section-heading">履歷</h2>
+    <div class="resume-links">
+      <a href="resume-en.pdf" download class="resume-card">
+        <div class="resume-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12"></path>
+            <path d="M7 10l5 5 5-5"></path>
+            <path d="M4 19h16"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="resume-card-label">English</div>
+          <div class="resume-card-value">Download Resume (PDF)</div>
+        </div>
+      </a>
+
+      <a href="resume-zh.pdf" download class="resume-card">
+        <div class="resume-icon">
+          <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12"></path>
+            <path d="M7 10l5 5 5-5"></path>
+            <path d="M4 19h16"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="resume-card-label">中文</div>
+          <div class="resume-card-value">下載履歷（PDF）</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- ============ QR CODES ============ -->
+    <h2 class="contact-section-heading">掃描造訪網站</h2>
+    <div class="qr-grid">
+      <div class="qr-card">
+        <div id="qr-en" class="qr-canvas"></div>
+        <div class="qr-card-label">English Site</div>
+        <div class="qr-card-url">cyyin.github.io/CY-portfolio</div>
+      </div>
+      <div class="qr-card">
+        <div id="qr-zh" class="qr-canvas"></div>
+        <div class="qr-card-label">中文網站</div>
+        <div class="qr-card-url">cyyin.github.io/CY-portfolio/index-zh.html</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -112,6 +160,27 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="script.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof QRCode === 'undefined') return;
+    var siteBase = 'https://cyyin.github.io/CY-portfolio/';
+    new QRCode(document.getElementById('qr-en'), {
+      text: siteBase + 'index.html',
+      width: 140,
+      height: 140,
+      colorDark: '#0F172A',
+      colorLight: '#FFFFFF'
+    });
+    new QRCode(document.getElementById('qr-zh'), {
+      text: siteBase + 'index-zh.html',
+      width: 140,
+      height: 140,
+      colorDark: '#0F172A',
+      colorLight: '#FFFFFF'
+    });
+  });
+</script>
 </body>
 </html>

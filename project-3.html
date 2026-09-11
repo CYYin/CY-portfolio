@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legacy BPM Modernization | Chang Yu Yin</title>
-<meta name="description" content="Project detail: Legacy BPM Modernization — From Domino to Modern Web Platform.">
+<title>SRM–ERP Order Automation &amp; Sync System | Chang Yu Yin</title>
+<meta name="description" content="Project detail: SRM–ERP Order Automation &amp; Sync System.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
 <section class="detail-header">
   <div class="container">
     <a href="projects.html" class="back-link">&larr; Back to Projects</a>
-    <h1>Legacy BPM Modernization — From Domino to Modern Web Platform</h1>
+    <h1>SRM–ERP Order Automation &amp; Sync System</h1>
   </div>
 </section>
 
@@ -43,55 +43,127 @@
 <section>
   <div class="container detail-content">
 
-    <h2>Problem</h2>
-    <p>
-      A core BPM ecosystem had been running on HCL Domino for years, accumulating business-critical
-      data and workflows that were increasingly costly to maintain and difficult to extend. The platform
-      limited integration options with modern systems and made it hard to scale as the organization's
-      digital transformation initiatives expanded.
+    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 32px;">
+      Role: Project Manager&nbsp;&nbsp;|&nbsp;&nbsp;Systems: SRM (MSSQL) ↔ ERP (Oracle)&nbsp;&nbsp;|&nbsp;&nbsp;Collaboration: cross-department, cross-border team
     </p>
 
-    <h2>Solution</h2>
+    <h2>Business Context &amp; Problem</h2>
     <p>
-      I led the modernization of the legacy HCL Domino BPM ecosystem, migrating business data and
-      workflows toward a modern, scalable platform architecture. The new architecture is built on
-      SQL Server for data persistence, Vue.js for the front-end experience, and Python-based APIs and
-      microservices for business logic and integration. This shift enabled the organization to move away
-      from a closed legacy platform toward an open, maintainable, and extensible system architecture.
+      Order data had long relied on staff manually re-keying the same information into both the SRM
+      and ERP systems. The business team's own feedback was direct: entering orders one by one by hand
+      was slow and error-prone, and it was the single biggest efficiency bottleneck in the process —
+      which is what triggered this project in the first place.
     </p>
-
-    <h2>Tech Stack</h2>
+    <p>The real-world impact of the problem:</p>
     <ul>
-      <li>HCL Domino (legacy source system)</li>
-      <li>SQL Server</li>
-      <li>Vue.js</li>
-      <li>Python</li>
-      <li>REST APIs &amp; Microservices</li>
+      <li><strong>Delivery delays</strong> — manual processing couldn't keep pace with order volume</li>
+      <li><strong>High labor cost</strong> — significant staff time spent processing orders one at a time</li>
+      <li><strong>Error-prone, missed orders</strong> — an inherent risk of manual data entry</li>
+      <li><strong>Overtime for the business team</strong> — peak order volume was hard to absorb manually</li>
     </ul>
 
-    <h2>Your Role</h2>
+    <h2>My Role &amp; Key Challenges</h2>
     <p>
-      As Project Manager, I defined the migration strategy and architecture direction, coordinated
-      between legacy system experts and the new development team, and managed the phased rollout to
-      minimize business disruption. I was accountable for data integrity throughout the migration and
-      for aligning the new platform with long-term IT architecture goals.
+      <strong>My role:</strong> Project Manager, owning requirements clarification, cross-team
+      coordination, and go-live — the key link between business needs and technical implementation.
     </p>
 
-    <h2>Impact / Metrics</h2>
-    <ul class="impact-list">
-      <li>Successfully migrated core BPM workflows off a legacy, hard-to-maintain platform</li>
-      <li>Established a modern, API-driven architecture ready for future integration</li>
-      <li>Improved system maintainability and reduced dependency on legacy Domino expertise</li>
+    <div class="role-meta">
+      <div class="role-meta-block">
+        <h4>Stakeholders</h4>
+        <ul>
+          <li>Business department</li>
+          <li>IT department</li>
+          <li>The client's SRM system point of contact</li>
+          <li>Philippines-based development team</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Constraints</h4>
+        <ul>
+          <li>Timeline pressure</li>
+        </ul>
+      </div>
+      <div class="role-meta-block">
+        <h4>Risks</h4>
+        <ul>
+          <li>The biggest challenge wasn't the technology itself, but the timeline pressure combined with cross-company, cross-team communication — needing to align business expectations, IT's system standards, the client's SRM data rules, and the working rhythm of the Philippines development team, all at once</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Approach &amp; Solution</h2>
+    <p>
+      The solution was to build an automated order sync system that replaced manual entry with system
+      integration, letting order data flow reliably between SRM and ERP on its own.
+    </p>
+    <p>
+      <strong>Architecture:</strong> SRM (MSSQL) → sync engine (a FastAPI middleware layer) → ERP
+      (Oracle). The middleware runs both a scheduled comparison mechanism and a real-time event sync
+      mechanism, and exposes a front-end console for staff to review exceptions.
+    </p>
+    <p>
+      <strong>Tech stack:</strong> FastAPI / Python, dual Oracle + MSSQL database integration, a React /
+      Vite frontend, and a scheduler.
+    </p>
+    <p>
+      This project did not use AI-assisted development — the architecture and code were designed and
+      built entirely by the team.
+    </p>
+
+    <h2>Key Decisions &amp; Trade-offs</h2>
+    <div class="decision-block">
+      <h4>Decision</h4>
+      <p>
+        Implement both the scheduled comparison mechanism and the real-time event sync mechanism
+        together, rather than choosing just one, to balance data freshness with completeness.
+      </p>
+      <h4>Cost</h4>
+      <p>
+        Running both mechanisms in parallel noticeably extended the development timeline — but even
+        with timeline pressure as the biggest constraint, reliability wasn't something we were willing
+        to trade away.
+      </p>
+    </div>
+
+    <h2>Deliverables &amp; Impact</h2>
+    <h3>Deliverables</h3>
+    <ul>
+      <li>The SRM–ERP automated order sync system — the core system replacing manual, order-by-order data entry</li>
+      <li>A front-end admin console — for business/IT staff to check sync status and handle exception records</li>
+      <li>A cross-department, cross-border collaboration process — the working model established with the Philippines development team and the client's SRM point of contact</li>
     </ul>
+
+    <h3>Real-world impact</h3>
+    <ul class="impact-list">
+      <li>Substantially reduced order entry time — automated sync replaced manual, order-by-order entry, freeing up significant repetitive work for the business team</li>
+      <li>Eliminated overtime for the business team — peak order volume no longer depended on stacking up manual hours</li>
+      <li>Fewer human errors and missed orders — removing the manual entry step reduced both error and omission risk</li>
+    </ul>
+
+    <h2>Lessons Learned</h2>
+    <div class="lessons-block">
+      <p>
+        <strong>Cross-border, cross-department communication is harder than the technical
+        implementation itself.</strong> Working with the Philippines development team and the client's
+        SRM point of contact, the real challenge was aligning understanding and expectations, not
+        writing code — communication overhead is often the real variable that determines a project's
+        timeline. Prioritization under time pressure is a decisive skill: with limited time and
+        resources, judging which mechanisms had to be in place first and which could be refined later
+        mattered more for on-time, stable delivery than chasing technical perfection.
+      </p>
+    </div>
 
     <h2>Tags</h2>
     <div class="tags">
-      <span class="tag">BPM</span>
-      <span class="tag">HCL Domino</span>
-      <span class="tag">SQL Server</span>
-      <span class="tag">Vue.js</span>
+      <span class="tag">Project Management</span>
+      <span class="tag">FastAPI</span>
       <span class="tag">Python</span>
-      <span class="tag">Microservices</span>
+      <span class="tag">SQL Server</span>
+      <span class="tag">Oracle</span>
+      <span class="tag">React</span>
+      <span class="tag">System Integration</span>
+      <span class="tag">Process Automation</span>
     </div>
 
   </div>
