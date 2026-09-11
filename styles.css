@@ -743,9 +743,11 @@ a.contact-card:hover {
 }
 
 .resume-icon {
-  width: 22px;
-  height: 22px;
-  min-width: 22px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 8px;
+  background-color: var(--accent-soft);
   color: var(--accent);
   display: flex;
   align-items: center;
@@ -753,8 +755,8 @@ a.contact-card:hover {
 }
 
 .resume-icon svg {
-  width: 100%;
-  height: 100%;
+  width: 18px;
+  height: 18px;
   stroke: currentColor;
   fill: none;
 }
