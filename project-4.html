@@ -100,6 +100,11 @@
       <li>A central control table (Notes_System_List) drove the whole process through a Migration_Step state machine (0 → 1.1–1.9), keeping progress for all 300+ forms trackable and re-runnable.</li>
     </ul>
 
+    <figure class="detail-figure">
+      <img src="assets/projects/project-4.png" alt="Ten-step migration workflow diagram: retrieve field list from system, count fields, parse DXL form design file, generate column mapping (Excel), human verification of the mapping, generate field spec document, set up full field read permissions, create data table, full historical import, and ongoing incremental sync. Step 5 is the only step requiring human intervention." loading="lazy">
+      <figcaption>The 10-step migration workflow — step 5 (human verification of the mapping) is the only manual checkpoint</figcaption>
+    </figure>
+
     <h2>Key Decisions &amp; Trade-offs</h2>
     <div class="decision-block">
       <h4>Decision</h4>
