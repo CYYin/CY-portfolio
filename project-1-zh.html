@@ -47,26 +47,26 @@
     <p>
       公司內部長期仰賴老舊的 Lotus Notes 系統處理表單申請與簽核流程，涵蓋人事、行政、資訊等超過十六種常用表單。
       隨著 Notes 系統逐漸老化、難以維護與擴充，且無法滿足現代化的整合需求（如與 ERP、EHR 等企業系統串接），
-      公司決定啟動汰換專案，以自建的 <strong>UniCore BPM 2.0</strong> 平台取代舊系統。
+      公司決定啟動汰換專案，以自建的 <strong>BPM 2.0</strong> 平台取代舊系統。
     </p>
     <p>
       核心問題可歸納為三個層面：
     </p>
     <ul>
       <li><strong>系統層面</strong>：Notes 架構老舊、可維護性低，新增或修改表單／流程的成本高。</li>
-      <li><strong>流程層面</strong>：各表單的簽核邏輯、路由規則長年累積於 Notes 的程式碼與流程設計中，缺乏統一標準，難以稽核與擴充。</li>
-      <li><strong>整合層面</strong>：舊系統難以與企業內其他資訊系統（ERP、EHR 等）有效串接，形成資訊孤島。</li>
+      <li><strong>流程層面</strong>：各表單的簽核邏輯、路由規則長年累積於 Notes 的程式碼與流程設計中，缺乏統一標準，難以維護與擴充。</li>
+      <li><strong>整合層面</strong>：難以與企業內其他資訊系統（ERP、MES等）有效串接，形成資訊孤島。</li>
     </ul>
     <p>
       因此本專案的目標，是打造一個以 FastAPI + Vue 3 為基礎、具備通用表單引擎與多步驟審核流程引擎的企業級工作流平台，
-      並將舊系統中十六個以上的表單與流程，安全、可控地遷移至新平台。
+      並將舊系統中三百張表單與流程，安全、可控地遷移至新平台。
     </p>
 
     <h2>角色與挑戰</h2>
     <p>
       <strong>擔任角色：</strong>專案經理／AI 轉型主導（AI Transformation Lead）。
       負責整體專案的需求釐清、遷移排程、跨部門溝通，並主導將 AI 輔助開發導入既有的工程流程，
-      作為加速舊系統逆向工程與新系統開發的核心手段。
+      作為加速舊系統逆向工程與新系統開發的核心測試。
     </p>
 
     <div class="role-meta">
@@ -81,7 +81,7 @@
         <h4>限制條件</h4>
         <ul>
           <li>舊系統包袱：須相容並正確承接 Notes 既有表單資料與流程設計，業務不能中斷</li>
-          <li>資源有限：十六個以上表單須逐步遷移，高度仰賴 AI 輔助提升產能</li>
+          <li>資源有限：三百張表單須逐步遷移，高度仰賴 AI 輔助提升產能</li>
         </ul>
       </div>
       <div class="role-meta-block">
@@ -103,6 +103,11 @@
       <li><strong>BPM 2.0 多步驟審核流程引擎</strong>：支援條件式路由、並行簽核、授權規則（Authority Rule）與組織階層等複雜審核邏輯，取代 Notes 中分散、難以稽核的流程設計，讓所有表單共用同一套可控、可追蹤的流程核心。</li>
       <li><strong>AI 輔助逆向工程（Notes 轉換工具鏈）</strong>：針對舊系統資產（DXL 表單設計匯出、流程定義匯出、欄位腳本邏輯），建立一系列 AI 輔助轉換工具，將 Notes 的設計資產自動轉譯為新平台的 Schema 草稿、流程步驟設定與欄位邏輯（visible_when / required_when / auto_fill / compute），再由人工審閱確認後發布，顯著加速原本需要大量人工比對的分析工作。</li>
     </ul>
+
+    <figure class="detail-figure">
+      <img src="assets/projects/project-1.png" alt="BPM 2.0 分層架構圖：展示層（Vue 3 + Vite）、API 閘道層（FastAPI、Nginx、JWT）、核心引擎層（表單引擎、流程引擎、BPMN 執行、RBAC）、資料與儲存層（PostgreSQL、Redis、S3/MinIO）" loading="lazy">
+      <figcaption>BPM 2.0 系統架構圖 — 展示層、API 閘道層、核心引擎層與資料儲存層</figcaption>
+    </figure>
 
     <h2>關鍵決策與取捨</h2>
     <div class="decision-block">
@@ -151,11 +156,10 @@
 
     <h2>標籤</h2>
     <div class="tags">
-      <span class="tag">AI 轉型</span>
+      <span class="tag">系統轉型</span>
       <span class="tag">生成式 AI</span>
       <span class="tag">BPM</span>
       <span class="tag">SDLC 自動化</span>
-      <span class="tag">系統轉型</span>
     </div>
 
   </div>
