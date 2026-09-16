@@ -89,7 +89,7 @@
     <p>採「Schema 建置 → 業務審核 → 資料同步」兩階段架構：</p>
     <ul>
       <li>透過 Domino REST API (DRAPI) 呼叫 form2view 端點取得各表單 Active View 欄位清單。</li>
-      <li>用 Claude AI API 對欄位做語意分析（每批 50 欄），自動推斷中英文對應、資料型別、Master/Detail 結構，產出 Column Mapping Excel 供業務人員審核。</li>
+      <li>以 AI 輔助對欄位做語意分析（每批 50 欄），自動推斷中英文對應、資料型別、Master/Detail 結構，產出 Column Mapping Excel 供業務人員審核。</li>
       <li>審核通過後自動產生 CREATE TABLE 並建表，搭配 DXL（Notes Designer 匯出的表單設計檔）解析 keyword 欄位的代碼→顯示文字對應表，處理多值欄位（清單型→Junction Table／標籤型→逗號分隔字串）。</li>
       <li>全量初始匯入後，排程依 sync_group（hourly/daily/weekly/monthly）觸發增量同步：以 DRAPI unreadOnly=true 取得未讀文件清單、markRead=true 標記已讀作為天然斷點續傳機制，SQL Server / Oracle 端以 notes_unid 做 UPSERT，並支援軟刪除。</li>
       <li>以中央控制表 Notes_System_List 的 Migration_Step（0 → 1.1~1.9）狀態機貫穿整個流程，讓 300+ 張表單的進度可追蹤、可重跑。</li>
@@ -128,7 +128,7 @@
     <h3>交付物</h3>
     <ul>
       <li>DRAPI 封裝客戶端（Token 管理、分頁、錯誤重試）</li>
-      <li>Claude AI 欄位語意分析 pipeline（中英文對應、型別推斷、Master/Detail 判斷）</li>
+      <li>AI 輔助欄位語意分析 pipeline（中英文對應、型別推斷、Master/Detail 判斷）</li>
       <li>Column Mapping Excel 審核工作流（待審核 → 已審核 → 自動建表）</li>
       <li>全量初始匯入 + 增量同步引擎（支援 SQL Server、Oracle 雙目標）</li>
       <li>中央控制表驅動的移轉狀態機（Migration_Step 0~1.9）</li>
@@ -158,7 +158,7 @@
     <div class="tags">
       <span class="tag">Python</span>
       <span class="tag">Domino REST API (DRAPI)</span>
-      <span class="tag">Claude AI API</span>
+      <span class="tag">AI 輔助開發</span>
       <span class="tag">SQL Server</span>
       <span class="tag">ETL</span>
       <span class="tag">資料遷移</span>
