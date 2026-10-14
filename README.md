@@ -16,7 +16,7 @@ Bilingual site: every page has an English version and a `-zh` Traditional Chines
 
 ## Things to still edit
 
-- `contact.html` / `contact-zh.html` — add your resume PDFs at `resume-en.pdf` and `resume-zh.pdf` in the repo root (same folder as `index.html`) so the download buttons work. Until those files exist, the download links will 404.
+- `contact.html` / `contact-zh.html` — resume downloads are hidden; resume PDFs are kept out of this public repo (local copies go in the git-ignored `_private/` folder).
 
 ## Deploy to GitHub Pages
 
